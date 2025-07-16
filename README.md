@@ -25,7 +25,7 @@ This tool provides a sophisticated yet easy-to-use solution for maintaining anon
 git clone https://github.com/MilesPhoka/IP-Vortex.git
 
 # Navigate to project directory
-cd ip-vortex
+cd IP-Vortex
 
 # Make script executable
 chmod +x ip-vortex.sh
