@@ -33,6 +33,11 @@ chmod +x ip-vortex.sh
 # Run the tool (will auto-install dependencies)
 ./ip-vortex.sh --help
 ```
+## Version Check
+```bash
+# Display the current version of IP-Vortex
+./ip-vortex.sh -V
+```
 
  ## Comprehensive Usage Examples
 - Basic IP Rotation
