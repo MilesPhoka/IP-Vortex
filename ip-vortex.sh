@@ -67,6 +67,7 @@ display_help() {
     echo "  -t, --time <seconds>     Rotate IP every X seconds (minimum: $MIN_ROTATION_TIME)"
     echo "  -m, --mac                Randomize MAC address during rotation"
     echo "  -v, --verbose            Show detailed output"
+    echo "  -V, --version            Show version information"
     echo "  -s, --status             Show current network status"
     echo "  -u, --update             Check for updates"
     echo "  -h, --help               Display this help message"
@@ -74,8 +75,17 @@ display_help() {
     echo "Examples:"
     echo "  $0 -I wlan0              Rotate IP on wlan0"
     echo "  $0 -t 60 -m              Rotate every 60s with MAC randomization"
+    echo "  $0 -V                    Show version"
     echo "  $0 -s                    Show current network status"
     echo
+}
+
+# Display version information
+display_version() {
+    echo "IP-Vortex version 1.2"
+    echo "Author: Miles Phoka"
+    echo "https://github.com/MilesPhoka/IP-Vortex"
+    exit 0
 }
 
 # Check for updates
@@ -322,6 +332,9 @@ main() {
             -v|--verbose)
                 VERBOSE=true
                 shift
+                ;;
+             -V|--version)
+                display_version
                 ;;
             -s|--status)
                 show_status
