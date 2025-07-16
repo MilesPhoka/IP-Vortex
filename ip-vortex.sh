@@ -25,6 +25,7 @@ display_banner() {
     echo -e "\e[38;5;39m===============================================================\e[0m"
     echo
 }
+
 # Cleanup function to restore network on exit
 cleanup() {
     echo -e "\n\e[33m[!] Cleaning up and restoring network...\e[0m"
@@ -112,16 +113,16 @@ show_status() {
         echo "--------------------------------"
         
         # IP Address
-        ip_addr=$(ip -4 addr show $iface 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+        ip_addr=$(ip -4 addr show "$iface" 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
         [[ -z "$ip_addr" ]] && ip_addr="None"
         echo -e "IP Address:\t$ip_addr"
         
         # MAC Address
-        mac_addr=$(ip link show $iface | grep -oP '(?<=link/ether\s)[0-9a-f:]+')
+        mac_addr=$(ip link show "$iface" | grep -oP '(?<=link/ether\s)[0-9a-f:]+')
         echo -e "MAC Address:\t$mac_addr"
         
         # Gateway
-        gateway=$(ip route | grep default | grep $iface | grep -oP '(?<=via\s)\d+(\.\d+){3}')
+        gateway=$(ip route | grep default | grep "$iface" | grep -oP '(?<=via\s)\d+(\.\d+){3}')
         [[ -z "$gateway" ]] && gateway="None"
         echo -e "Gateway:\t$gateway"
         
@@ -131,7 +132,7 @@ show_status() {
         
         # Internet Connectivity
         echo -n "Internet Access: "
-        if ping -c 1 -W 1 -I $iface 8.8.8.8 &> /dev/null; then
+        if ping -c 1 -W 1 -I "$iface" 8.8.8.8 &> /dev/null; then
             echo -e "\e[32mYes\e[0m"
         else
             echo -e "\e[31mNo\e[0m"
@@ -174,7 +175,7 @@ install_dependencies() {
     
     # Verify installation
     for tool in "${missing_tools[@]}"; do
-        if ! command -v $tool &> /dev/null; then
+        if ! command -v "$tool" &> /dev/null; then
             echo -e "\e[31m[!] Failed to install $tool. Please install manually.\e[0m"
             exit 1
         fi
@@ -185,6 +186,7 @@ install_dependencies() {
 
 # Detect OS and dependencies
 detect_os() {
+    # shellcheck disable=SC1091
     if [ -f /etc/os-release ]; then
         . /etc/os-release
         OS=$NAME
@@ -197,7 +199,7 @@ detect_os() {
     # Check required tools
     missing_tools=()
     for tool in ip dhclient macchanger iw sed awk grep; do
-        if ! command -v $tool &> /dev/null; then
+        if ! command -v "$tool" &> /dev/null; then
             missing_tools+=("$tool")
         fi
     done
@@ -220,7 +222,7 @@ detect_interfaces() {
         [[ "$iface" == "lo" || "$iface" == docker* ]] && continue
         
         # Check if interface is up
-        state=$(ip -o link show dev $iface | grep -oP '(?<=state\s)\w+')
+        state=$(ip -o link show dev "$iface" | grep -oP '(?<=state\s)\w+')
         if [[ "$state" == "UP" ]]; then
             active_interfaces+=("$iface")
             echo -e "  \e[32m● $iface\e[0m (UP)"
@@ -244,33 +246,33 @@ rotate_ip() {
     [[ "$verbose" == "true" ]] && echo -e "\n\e[36m[+] Starting IP rotation on $iface...\e[0m"
     
     # Get current IP
-    old_ip=$(ip -4 addr show dev $iface 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+    old_ip=$(ip -4 addr show dev "$iface" 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
     [[ "$verbose" == "true" ]] && echo "  Current IP: ${old_ip:-None}"
     
     # Release current lease
     [[ "$verbose" == "true" ]] && echo "  Releasing current DHCP lease..."
-    sudo dhclient -r -v $iface &> /dev/null
+    sudo dhclient -r -v "$iface" &> /dev/null
     
     # Bring interface down
     [[ "$verbose" == "true" ]] && echo "  Bringing interface down..."
-    sudo ip link set dev $iface down
+    sudo ip link set dev "$iface" down
     
     # Change MAC address if requested
     if [[ "$change_mac" == "true" ]]; then
         [[ "$verbose" == "true" ]] && echo "  Randomizing MAC address..."
-        sudo macchanger -r $iface &> /dev/null
+        sudo macchanger -r "$iface" &> /dev/null
     fi
     
     # Bring interface up
     [[ "$verbose" == "true" ]] && echo "  Bringing interface up..."
-    sudo ip link set dev $iface up
+    sudo ip link set dev "$iface" up
     
     # Get new lease
     [[ "$verbose" == "true" ]] && echo "  Requesting new IP address..."
-    sudo dhclient -v $iface &> /dev/null
+    sudo dhclient -v "$iface" &> /dev/null
     
     # Get new IP
-    new_ip=$(ip -4 addr show dev $iface 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+    new_ip=$(ip -4 addr show dev "$iface" 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
     
     if [[ -n "$new_ip" && "$old_ip" != "$new_ip" ]]; then
         [[ "$verbose" == "true" ]] && echo -e "\e[32m  [+] Rotation successful! New IP: $new_ip\e[0m"
@@ -284,7 +286,7 @@ rotate_ip() {
             sleep 5
             if ! check_internet; then
                 [[ "$verbose" == "true" ]] && echo -e "\e[31m  [!] Internet not recovered. Trying again...\e[0m"
-                sudo dhclient -v $iface &> /dev/null
+                sudo dhclient -v "$iface" &> /dev/null
             fi
         fi
         
