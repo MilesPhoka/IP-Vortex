@@ -3,7 +3,7 @@ This tool provides a sophisticated yet easy-to-use solution for maintaining anon
 
 # IP Vortex - Advanced IP Rotation Tool
 
-![IP Vortex Banner](https://blog.apnic.net/wp-content/uploads/2019/07/IP_banner.png?v=520cffb00b5dfb0272f17668f2693ff7ef0a6c9bf37aa9e22a0c709e9f41f79d)
+![IP Vortex Banner](https://www.ovhcloud.com/sites/default/files/styles/large_screens_1x/public/2022-04/network-illustration_failover-ip.webp)
 
 **IP Vortex** is a powerful network utility designed for security professionals, penetration testers, and bug bounty hunters. This tool provides sophisticated IP rotation capabilities to help you maintain anonymity and bypass IP-based restrictions during security testing activities.
 
