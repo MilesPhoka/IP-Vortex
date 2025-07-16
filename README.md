@@ -191,16 +191,14 @@ watch -n 1 'curl -s ifconfig.me'
 sudo dhclient -r wlan0
 sudo dhclient -v wlan0
 ```
-# Ethical security testing where IP rotation provides value
-+-----------------+---------------------+
+## Ethical security testing where IP rotation provides value
 | Scenario        | Usefulness (1-5★) |
-+-----------------+---------------------+
+|-----------------|---------------------|
 | Web App Scanning| ★★★★☆              |
 | API Testing     | ★★★★☆              |
 | Network Probes  | ★★★☆☆              |
 | Brute Force     | ★★☆☆☆ (risky)      |
 | VPN Avoidance   | ★☆☆☆☆ (use VPN)    |
-+-----------------+---------------------+
 
 # Contribution Guidelines
 ## I welcome contributions! Here's how to help:
