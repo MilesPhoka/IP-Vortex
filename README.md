@@ -191,7 +191,7 @@ sudo dhclient -v wlan0
 ## I welcome contributions! Here's how to help:
 - Fork the repository
 - Create a feature branch (`git checkout -b feature/improvement`)
-- Commit your changes (`git commit -am 'Add new feature`)
+- Commit your changes (`git commit -am 'Add new feature'`)
 - Push to the branch (`git push origin feature/improvement`)
 - Open a pull request
 
