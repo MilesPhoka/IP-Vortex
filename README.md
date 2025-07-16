@@ -22,7 +22,7 @@ This tool provides a sophisticated yet easy-to-use solution for maintaining anon
 
 ```bash
 # Clone the repository
-git clone https://github.com/milesahead/ip-vortex.git
+git clone https://github.com/MilesPhoka/IP-Vortex.git
 
 # Navigate to project directory
 cd ip-vortex
